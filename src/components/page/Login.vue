@@ -28,12 +28,15 @@
 </template>
 
 <script>
+import service from '../../utils/request';
+import md5 from "js-md5";
 export default {
+
     data: function() {
         return {
             param: {
-                username: 'admin',
-                password: '123123',
+                username: '',
+                password: '',
             },
             rules: {
                 username: [{ required: true, message: '请输入用户名', trigger: 'blur' }],
@@ -43,11 +46,23 @@ export default {
     },
     methods: {
         submitForm() {
+            let that = this;
             this.$refs.login.validate(valid => {
                 if (valid) {
-                    this.$message.success('登录成功');
-                    localStorage.setItem('ms_username', this.param.username);
-                    this.$router.push('/');
+                    console.log(this.param.username + this.param.password)
+                    service.post('/admin/login?' + "loginName=" + this.param.username + "&password="
+                        + md5(this.param.password))
+                        .then(function(res) {
+                            if (res.code === 200) {
+                                that.$message.success('登录成功');
+                                localStorage.setItem('ms_username', that.param.username);
+                                that.$router.push('/');
+                            } else {
+                                that.$message.error("请检查用户名和密码");
+                                return false;
+                            }
+                        });
+
                 } else {
                     this.$message.error('请输入账号和密码');
                     console.log('error submit!!');

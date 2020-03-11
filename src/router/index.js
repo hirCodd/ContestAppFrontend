@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import Router from 'vue-router';
+import router from '@vue/cli-service/generator/router/template/src/router';
 
 Vue.use(Router);
 
@@ -27,7 +28,7 @@ export default new Router({
                 {
                     path: '/table',
                     component: () => import(/* webpackChunkName: "table" */ '../components/page/BaseTable.vue'),
-                    meta: { title: '基础表格' }
+                    meta: { title: '比赛表格数据' }
                 },
                 {
                     path: '/tabs',
@@ -43,7 +44,7 @@ export default new Router({
                     // 富文本编辑器组件
                     path: '/editor',
                     component: () => import(/* webpackChunkName: "editor" */ '../components/page/VueEditor.vue'),
-                    meta: { title: '富文本编辑器' }
+                    meta: { title: '比赛信息富文本编辑器' }
                 },
                 {
                     // markdown组件
