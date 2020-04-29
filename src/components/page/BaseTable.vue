@@ -63,15 +63,20 @@
                         >编辑</el-button>
                         <el-button
                                 type="text"
-                                icon="el-icon-loading"
+                                icon="el-icon-connection"
                                 @click="handleTeam(scope.$index, scope.row)"
                         >配对</el-button>
                         <el-button
                             type="text"
                             icon="el-icon-download"
-                            class="red"
                             @click="handleDelete(scope.$index, scope.row)"
-                        >下载队伍匹配信息</el-button>
+                        >下载</el-button>
+<!--                        <el-button-->
+<!--                                type="text"-->
+<!--                                icon="el-icon-download"-->
+<!--                                class="red"-->
+<!--                                @click="handleDelete(scope.$index, scope.row)"-->
+<!--                        >下载</el-button>-->
                     </template>
                 </el-table-column>
             </el-table>

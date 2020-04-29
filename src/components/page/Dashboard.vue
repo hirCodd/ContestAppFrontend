@@ -11,13 +11,13 @@
                         </div>
                     </div>
                     <div class="user-info-list">
-                        上次登录时间：
-                        <span>2019-11-01</span>
+                        本次登陆时间：
+                        <span>{{this.getFormatDate()}}</span>
                     </div>
-                    <div class="user-info-list">
-                        上次登录地点：
-                        <span>东莞</span>
-                    </div>
+<!--                    <div class="user-info-list">-->
+<!--                        上次登录地点：-->
+<!--                        <span>东莞</span>-->
+<!--                    </div>-->
                 </el-card>
                 <el-card shadow="hover" style="height:252px;">
                     <div slot="header" class="clearfix">
@@ -110,13 +110,13 @@
 </template>
 
 <script>
-import Schart from 'vue-schart';
-import bus from '../common/bus';
-export default {
+    import Schart from 'vue-schart';
+
+    export default {
     name: 'dashboard',
     data() {
         return {
-            name: localStorage.getItem('ms_username'),
+            name: sessionStorage.getItem('ms_username'),
             todoList: [
                 {
                     title: '今天要修复100个bug',
@@ -244,6 +244,20 @@ export default {
                 const date = new Date(now - (6 - index) * 86400000);
                 item.name = `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}`;
             });
+        },
+
+        getFormatDate(){
+            var date = new Date();
+            var month = date.getMonth() + 1;
+            var strDate = date.getDate();
+            if (month >= 1 && month <= 9) {
+                month = "0" + month;
+            }
+            if (strDate >= 0 && strDate <= 9) {
+                strDate = "0" + strDate;
+            }
+            return date.getFullYear() + "-" + month + "-" + strDate
+                + " " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
         }
         // handleListener() {
         //     bus.$on('collapse', this.handleBus);

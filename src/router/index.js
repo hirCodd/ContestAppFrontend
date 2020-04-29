@@ -1,6 +1,5 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import router from '@vue/cli-service/generator/router/template/src/router';
 
 Vue.use(Router);
 

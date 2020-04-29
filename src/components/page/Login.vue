@@ -55,7 +55,7 @@ export default {
                         .then(function(res) {
                             if (res.code === 200) {
                                 that.$message.success('登录成功');
-                                localStorage.setItem('ms_username', that.param.username);
+                                sessionStorage.setItem('ms_username', that.param.username);
                                 that.$router.push('/');
                             } else {
                                 that.$message.error("请检查用户名和密码");
