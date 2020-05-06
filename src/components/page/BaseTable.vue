@@ -54,7 +54,7 @@
                             scope.row.contestStartTime, scope.row.contestEndTime)}}</el-tag>
                     </template>
                 </el-table-column>
-                <el-table-column label="操作" width="180" align="center">
+                <el-table-column label="操作" width="210" align="center">
                     <template slot-scope="scope">
                         <el-button
                             type="text"
@@ -65,12 +65,13 @@
                                 type="text"
                                 icon="el-icon-connection"
                                 @click="handleTeam(scope.$index, scope.row)"
-                        >配对</el-button>
+                        >匹配</el-button>
                         <el-button
                             type="text"
-                            icon="el-icon-download"
-                            @click="handleDelete(scope.$index, scope.row)"
-                        >下载</el-button>
+                            icon="el-icon-zoom-in"
+                            @click="handleView(scope.$index, scope.row)"
+                        >在线查看</el-button>
+
 <!--                        <el-button-->
 <!--                                type="text"-->
 <!--                                icon="el-icon-download"-->
@@ -91,6 +92,31 @@
                 ></el-pagination>
             </div>
         </div>
+
+        <el-dialog title="匹配结果查看" :visible.sync="viewVisible" width="70%">
+            <div class="container">
+                <el-table
+                        :data="contestData"
+                        border
+                        class="table"
+                        ref="multipleTable"
+                        header-cell-class-name="table-header"
+                        @selection-change="handleSelectionChange"
+                >
+                    <el-table-column prop="contestId" label="ID" width="55" align="center"></el-table-column>
+                    <el-table-column prop="teamId" label="team" width="55" align="center"></el-table-column>
+                    <el-table-column prop="memberName" label="队员名称"></el-table-column>
+                    <el-table-column prop="memberPhone" label="队员号码"></el-table-column>
+                    <el-table-column prop="contestArea" label="比赛大区"></el-table-column>
+                    <el-table-column prop="memberPlayerId" label="队员id"></el-table-column>
+                    <el-table-column prop="memberPlayerLevel" label="队员段位"></el-table-column>
+                </el-table>
+            </div>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="viewVisible = false">关 闭</el-button>
+<!--                <el-button type="primary" @click="saveEdit">确 定</el-button>-->
+            </span>
+        </el-dialog>
 
         <!-- 编辑弹出框 -->
         <el-dialog title="编辑" :visible.sync="editVisible" width="70%">
@@ -271,9 +297,11 @@
             pageTotal: 0,
             currentPage: '',
             tableData: [],
+            contestData: [],
             multipleSelection: [],
             delList: [],
             editVisible: false,
+            viewVisible: false,
             form: {},
             idx: -1,
             id: -1
@@ -311,19 +339,22 @@
             this.getData();
         },
         handleTeam(index, row) {
-
+            console.log(row.contestId);
+            service.post('contest/match?' + 'contestId=' + row.contestId).then(res => {
+                if (res.msg === "success") {
+                    this.$message.success("已成功提交匹配数据，请等待5分钟！");
+                }
+            });
         },
         // 删除操作
         handleDelete(index, row) {
             // 二次确认删除
             this.$confirm('确定要删除吗？', '提示', {
                 type: 'warning'
-            })
-                .then(() => {
-                    this.$message.success('删除成功');
-                    this.tableData.splice(index, 1);
-                })
-                .catch(() => {});
+            }).then(() => {
+                this.$message.success('删除成功');
+                this.tableData.splice(index, 1);
+            }).catch(() => {});
         },
         // 多选操作
         handleSelectionChange(val) {
@@ -342,6 +373,15 @@
             }
             this.$message.error(`删除了${str}`);
             this.multipleSelection = [];
+        },
+        handleView(index, row) {
+            console.log(row.contestId);
+            this.viewVisible = true;
+            service.get('contest/getMatchResult?' + 'contestId=' + row.contestId).then(res => {
+                console.log(res);
+                this.contestData = res.data;
+            });
+
         },
         // 编辑操作
         handleEdit(index, row) {
